@@ -2,9 +2,29 @@
   "name": "dynamodb-admin",
   "private": true,
   "version": "0.1.0",
-  "description": "A modern DynamoDB admin GUI and desktop client",
+  "description": "Open-source DynamoDB admin GUI and desktop client for Amazon DynamoDB, DynamoDB Local, and LocalStack",
   "author": "Technodweep",
   "homepage": "https://technodweep.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sandeepkurien/dynamodb-desktop-admin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sandeepkurien/dynamodb-desktop-admin/issues"
+  },
+  "keywords": [
+    "dynamodb",
+    "dynamodb-admin",
+    "dynamodb-gui",
+    "dynamodb-client",
+    "dynamodb-desktop",
+    "dynamodb-local",
+    "aws",
+    "database-admin",
+    "database-gui",
+    "desktop-app",
+    "tauri"
+  ],
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {

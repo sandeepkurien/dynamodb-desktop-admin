@@ -8,6 +8,7 @@
 - `raster/dynamodweep-mark-1024.png` — 1024 px transparent raster export.
 - `raster/dynamodweep-logo-light-2400.png` — 2400 × 640 transparent lockup for light backgrounds.
 - `raster/dynamodweep-logo-dark-2400.png` — 2400 × 640 transparent lockup for dark backgrounds.
+- `social/dynamodweep-og-1200x630.png` — Open Graph and social-sharing preview.
 - `concept-reference.png` — generated design exploration retained as a reference, not the production logo.
 - `technodweep-logo.png` — supplied Technodweep parent-brand reference.
 

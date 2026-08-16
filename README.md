@@ -7,9 +7,9 @@
 
 # DynamoDweep
 
-**A modern DynamoDB admin GUI and desktop client.**
+**An open-source DynamoDB admin GUI and desktop client.**
 
-DynamoDweep makes it easier to browse tables, query and edit items, manage indexes and table settings, and work with Amazon DynamoDB or DynamoDB Local from one desktop application.
+DynamoDweep is a cross-platform DynamoDB GUI for browsing tables, querying and editing items, managing indexes and table settings, and working with Amazon DynamoDB, DynamoDB Local, or LocalStack from one desktop application.
 
 The name pairs DynamoDB with *dvīpa* (`द्वीप`), the Sanskrit word for “island.”
 
