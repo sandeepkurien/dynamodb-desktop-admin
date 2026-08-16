@@ -1,4 +1,5 @@
 use crate::connections::{load_connections, save_connections, SavedConnection};
+use crate::local::ManagedProc;
 use aws_sdk_dynamodb::Client;
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -6,6 +7,7 @@ use std::sync::Mutex;
 pub struct AppState {
     pub connections: Mutex<Vec<SavedConnection>>,
     pub clients: Mutex<HashMap<String, Client>>,
+    pub local_procs: Mutex<HashMap<String, ManagedProc>>,
 }
 
 impl AppState {
@@ -13,6 +15,7 @@ impl AppState {
         Self {
             connections: Mutex::new(load_connections()),
             clients: Mutex::new(HashMap::new()),
+            local_procs: Mutex::new(HashMap::new()),
         }
     }
 

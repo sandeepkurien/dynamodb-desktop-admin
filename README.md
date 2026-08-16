@@ -12,6 +12,7 @@ Connect with an AWS named profile, access keys, or DynamoDB Local. Browse tables
   - DynamoDB Local / LocalStack via endpoint (default `http://localhost:8000`)
   - Saved connections stored on this machine
   - Open several connections at once (tabs); add more with **+** without closing the others
+  - **Managed DynamoDB Local**: create multiple named local databases (one folder per project), download the official engine on first use (~50 MB, not bundled), then start / stop / open / duplicate / delete from the sidebar
 - **Tables**
   - List, filter, create, and delete
   - Schema: keys, attribute definitions, GSIs, LSIs

@@ -218,6 +218,39 @@ export interface SoftDeleteSpec {
 
 export const SOFT_DELETE_TOKEN = "DELETED#";
 
+export interface LocalDbMeta {
+  id: string;
+  name: string;
+  slug: string;
+  port: number;
+  mode: string;
+  created_at: string;
+  last_opened_at?: string | null;
+}
+
+export interface LocalDbInfo {
+  id: string;
+  name: string;
+  slug: string;
+  port: number;
+  mode: string;
+  created_at: string;
+  last_opened_at?: string | null;
+  running: boolean;
+  pid?: number | null;
+  endpoint: string;
+  data_path: string;
+  size_bytes: number;
+}
+
+export interface RuntimeStatus {
+  java_path?: string | null;
+  java_version?: string | null;
+  runtime_ready: boolean;
+  runtime_path: string;
+  download_url: string;
+}
+
 export const FILTER_OPERATORS = [
   ...SK_OPERATORS,
   { value: "ne", label: "≠" },

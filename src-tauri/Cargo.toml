@@ -26,3 +26,6 @@ thiserror = "2"
 dirs = "6"
 base64 = "0.22"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
+flate2 = "1"
+tar = "0.4"

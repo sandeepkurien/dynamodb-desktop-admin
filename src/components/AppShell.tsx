@@ -12,6 +12,7 @@ import { useApp } from "../store";
 import { BackupsView } from "./BackupsView";
 import { ConnectionScreen } from "./ConnectionScreen";
 import { CreateTableModal } from "./CreateTableModal";
+import { LocalManager } from "./LocalManager";
 import { ExplorePanel } from "./ExplorePanel";
 import { SchemaView } from "./SchemaView";
 import { SettingsView } from "./SettingsView";
@@ -107,7 +108,7 @@ export function AppShell() {
       </header>
 
       <div className="flex min-h-0 flex-1">
-        <aside className="flex w-[260px] flex-col border-r border-line bg-panel">
+        <aside className="flex w-[280px] flex-col border-r border-line bg-panel">
           <div className="flex items-center gap-2 border-b border-line p-3">
             <div className="relative flex-1">
               <Search size={13} className="absolute left-2.5 top-2.5 text-faint" />
@@ -125,6 +126,9 @@ export function AppShell() {
             >
               <RefreshCw size={13} className={loadingTables ? "animate-spin" : ""} />
             </button>
+          </div>
+          <div className="max-h-[42%] overflow-auto border-b border-line px-3 py-3">
+            <LocalManager compact />
           </div>
           <div className="flex items-center justify-between px-3 py-2 text-[11px] uppercase tracking-[0.12em] text-faint">
             <span>

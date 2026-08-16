@@ -6,8 +6,10 @@ import type {
   CreateIndexSpec,
   CreateTableRequest,
   KeyAttr,
+  LocalDbInfo,
   PageResult,
   QueryRequest,
+  RuntimeStatus,
   SavedConnection,
   ScanRequest,
   SoftDeleteSpec,
@@ -170,6 +172,20 @@ export const api = {
       backupArn,
       targetTableName,
     }),
+
+  localRuntimeStatus: () => invoke<RuntimeStatus>("local_runtime_status"),
+  ensureLocalRuntime: () => invoke<RuntimeStatus>("ensure_local_runtime"),
+  listLocalDbs: () => invoke<LocalDbInfo[]>("list_local_dbs"),
+  createLocalDb: (name: string, mode: string, port?: number | null) =>
+    invoke<LocalDbInfo>("create_local_db", { name, mode, port }),
+  renameLocalDb: (id: string, name: string) =>
+    invoke<LocalDbInfo>("rename_local_db", { id, name }),
+  duplicateLocalDb: (id: string, name: string) =>
+    invoke<LocalDbInfo>("duplicate_local_db", { id, name }),
+  deleteLocalDb: (id: string) => invoke<void>("delete_local_db", { id }),
+  startLocalDb: (id: string) => invoke<LocalDbInfo>("start_local_db", { id }),
+  stopLocalDb: (id: string) => invoke<LocalDbInfo>("stop_local_db", { id }),
+  openLocalDb: (id: string) => invoke<SavedConnection>("open_local_db", { id }),
 };
 
 export function errMessage(e: unknown): string {

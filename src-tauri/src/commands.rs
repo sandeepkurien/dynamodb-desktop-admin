@@ -401,3 +401,76 @@ pub async fn restore_backup(
     let client = state.client(&connection_id)?;
     dynamo::restore_backup(&client, &backup_arn, &target_table_name).await
 }
+
+#[tauri::command]
+pub fn local_runtime_status() -> crate::local::RuntimeStatus {
+    crate::local::runtime_status()
+}
+
+#[tauri::command]
+pub async fn ensure_local_runtime() -> Result<crate::local::RuntimeStatus> {
+    crate::local::ensure_runtime().await
+}
+
+#[tauri::command]
+pub fn list_local_dbs(state: State<'_, AppState>) -> Result<Vec<crate::local::LocalDbInfo>> {
+    crate::local::list_dbs(&state)
+}
+
+#[tauri::command]
+pub fn create_local_db(
+    state: State<'_, AppState>,
+    name: String,
+    mode: String,
+    port: Option<u16>,
+) -> Result<crate::local::LocalDbInfo> {
+    crate::local::create_db(&state, name, mode, port)
+}
+
+#[tauri::command]
+pub fn rename_local_db(
+    state: State<'_, AppState>,
+    id: String,
+    name: String,
+) -> Result<crate::local::LocalDbInfo> {
+    crate::local::rename_db(&state, &id, name)
+}
+
+#[tauri::command]
+pub fn duplicate_local_db(
+    state: State<'_, AppState>,
+    id: String,
+    name: String,
+) -> Result<crate::local::LocalDbInfo> {
+    crate::local::duplicate_db(&state, &id, name)
+}
+
+#[tauri::command]
+pub fn delete_local_db(state: State<'_, AppState>, id: String) -> Result<()> {
+    crate::local::delete_db(&state, &id)
+}
+
+#[tauri::command]
+pub async fn start_local_db(
+    state: State<'_, AppState>,
+    id: String,
+) -> Result<crate::local::LocalDbInfo> {
+    crate::local::ensure_runtime().await?;
+    crate::local::start_db(&state, &id).await
+}
+
+#[tauri::command]
+pub fn stop_local_db(
+    state: State<'_, AppState>,
+    id: String,
+) -> Result<crate::local::LocalDbInfo> {
+    crate::local::stop_db(&state, &id)
+}
+
+#[tauri::command]
+pub async fn open_local_db(
+    state: State<'_, AppState>,
+    id: String,
+) -> Result<SavedConnection> {
+    crate::local::open_db(&state, &id).await
+}

@@ -3,9 +3,11 @@ mod commands;
 mod connections;
 mod dynamo;
 mod error;
+mod local;
 mod state;
 
 use state::AppState;
+use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -43,7 +45,27 @@ pub fn run() {
             commands::create_backup,
             commands::delete_backup,
             commands::restore_backup,
+            commands::local_runtime_status,
+            commands::ensure_local_runtime,
+            commands::list_local_dbs,
+            commands::create_local_db,
+            commands::rename_local_db,
+            commands::duplicate_local_db,
+            commands::delete_local_db,
+            commands::start_local_db,
+            commands::stop_local_db,
+            commands::open_local_db,
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running DynamoDB Admin");
+        .build(tauri::generate_context!())
+        .expect("error while building DynamoDB Admin")
+        .run(|app, event| {
+            if matches!(
+                event,
+                tauri::RunEvent::Exit | tauri::RunEvent::ExitRequested { .. }
+            ) {
+                if let Some(state) = app.try_state::<AppState>() {
+                    local::stop_all(&state);
+                }
+            }
+        });
 }

@@ -18,6 +18,7 @@ import { useApp } from "../store";
 import type { ConnectionAuth, ConnectionDraft, ConnectionKind, SavedConnection } from "../types";
 import { REGIONS } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { LocalManager } from "./LocalManager";
 import { Badge, Button, Field } from "./ui";
 
 const emptyDraft = (kind: ConnectionKind): ConnectionDraft => {
@@ -190,6 +191,9 @@ export function ConnectionScreen({
               </button>
             ) : null}
           </div>
+        </div>
+        <div className="max-h-[46%] overflow-auto border-b border-line px-3 py-3">
+          <LocalManager compact onOpened={onClose} />
         </div>
         <div className="flex items-center justify-between px-4 py-3">
           <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-faint">
