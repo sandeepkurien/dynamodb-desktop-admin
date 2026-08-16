@@ -27,13 +27,13 @@ function Toasts() {
 }
 
 function Shell() {
-  const { active, refreshConnections } = useApp();
+  const { sessions, refreshConnections } = useApp();
   useEffect(() => {
     refreshConnections();
   }, [refreshConnections]);
   return (
     <>
-      {active ? <AppShell /> : <ConnectionScreen />}
+      {sessions.length > 0 ? <AppShell /> : <ConnectionScreen />}
       <Toasts />
     </>
   );

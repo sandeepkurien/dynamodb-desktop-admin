@@ -9,6 +9,7 @@ import {
   Unplug,
   Plug,
   ShieldCheck,
+  X,
 } from "lucide-react";
 import { revealItemInDir } from "@tauri-apps/plugin-opener";
 import { api, errMessage } from "../api";
@@ -38,8 +39,15 @@ const emptyDraft = (kind: ConnectionKind): ConnectionDraft => {
   };
 };
 
-export function ConnectionScreen() {
-  const { connections, refreshConnections, connectTo, toast } = useApp();
+export function ConnectionScreen({
+  asModal,
+  onClose,
+}: {
+  asModal?: boolean;
+  onClose?: () => void;
+} = {}) {
+  const { connections, sessions, refreshConnections, connectTo, disconnect, toast } = useApp();
+  const openIds = useMemo(() => new Set(sessions.map((s) => s.connection.id)), [sessions]);
   const [draft, setDraft] = useState<ConnectionDraft>(emptyDraft("profile"));
   const [kind, setKind] = useState<ConnectionKind>("profile");
   const [profiles, setProfiles] = useState<string[]>(["default"]);
@@ -97,7 +105,10 @@ export function ConnectionScreen() {
       setDraft({ ...draft, id: saved.id });
       setSelectedId(saved.id);
       toast("ok", "Connection saved");
-      if (andConnect) await connectTo(saved.id);
+      if (andConnect) {
+        await connectTo(saved.id);
+        onClose?.();
+      }
     } catch (e) {
       toast("err", errMessage(e));
     } finally {
@@ -112,6 +123,7 @@ export function ConnectionScreen() {
     setBusy("connect");
     try {
       await connectTo(id);
+      onClose?.();
     } catch {
       /* toast already shown */
     } finally {
@@ -137,6 +149,9 @@ export function ConnectionScreen() {
     if (!pendingDelete) return;
     const id = pendingDelete.id;
     try {
+      if (sessions.some((s) => s.connection.id === id)) {
+        await disconnect(id);
+      }
       await api.deleteConnection(id);
       await refreshConnections();
       if (selectedId === id) newConnection(kind);
@@ -147,18 +162,33 @@ export function ConnectionScreen() {
     }
   }
 
-  return (
-    <div className="grid-bg flex h-full">
+  const body = (
+    <div className={`grid-bg flex h-full ${asModal ? "rounded-2xl border border-line-strong overflow-hidden" : ""}`}>
       <aside className="flex w-[320px] flex-col border-r border-line bg-panel/90">
         <div className="border-b border-line px-5 py-5">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent">
               <Cloud size={16} />
             </div>
-            <div>
-              <div className="text-[15px] font-semibold">DynamoDB Admin</div>
-              <div className="text-[11px] text-faint">Desktop console</div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[15px] font-semibold">
+                {asModal ? "Add connection" : "DynamoDB Admin"}
+              </div>
+              <div className="text-[11px] text-faint">
+                {asModal
+                  ? "Open another account, profile, or Local instance"
+                  : "Desktop console"}
+              </div>
             </div>
+            {asModal ? (
+              <button
+                className="rounded-md p-1 text-muted hover:bg-hover hover:text-ink"
+                onClick={onClose}
+                title="Close"
+              >
+                <X size={16} />
+              </button>
+            ) : null}
           </div>
         </div>
         <div className="flex items-center justify-between px-4 py-3">
@@ -195,7 +225,10 @@ export function ConnectionScreen() {
                       onDoubleClick={() => onConnectSaved(c.id)}
                       title="Click to edit · Double-click to connect"
                     >
-                      <div className="truncate font-medium">{c.name}</div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="truncate font-medium">{c.name}</span>
+                        {openIds.has(c.id) ? <Badge tone="ok">Open</Badge> : null}
+                      </div>
                       <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-faint">
                         <span>{connectionKindLabel(c.auth.kind)}</span>
                         <span>·</span>
@@ -205,7 +238,7 @@ export function ConnectionScreen() {
                     <button
                       className="shrink-0 rounded-md p-1.5 text-muted hover:bg-raised hover:text-accent"
                       onClick={() => onConnectSaved(c.id)}
-                      title="Connect"
+                      title={openIds.has(c.id) ? "Switch to this connection" : "Open connection"}
                       disabled={busy === "connect"}
                     >
                       <Plug size={14} />
@@ -412,7 +445,11 @@ export function ConnectionScreen() {
                 disabled={!!busy}
               >
                 <Plug size={14} />
-                {busy === "connect" ? "Connecting…" : "Connect"}
+                {busy === "connect"
+                  ? "Connecting…"
+                  : draft.id && openIds.has(draft.id)
+                    ? "Switch to this"
+                    : "Connect"}
               </Button>
             ) : (
               <Button tone="primary" onClick={() => onSave(true)} disabled={!!busy}>
@@ -443,4 +480,14 @@ export function ConnectionScreen() {
       )}
     </div>
   );
+
+  if (asModal) {
+    return (
+      <div className="fixed inset-0 z-[55] flex items-center justify-center bg-black/65 p-6 backdrop-blur-sm">
+        <div className="h-[min(820px,100%)] w-full max-w-5xl">{body}</div>
+      </div>
+    );
+  }
+
+  return body;
 }

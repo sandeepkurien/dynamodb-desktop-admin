@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Database,
-  LogOut,
   Plus,
   RefreshCw,
   Search,
   Table2,
+  X,
 } from "lucide-react";
 import { connectionKindLabel } from "../lib/format";
 import { useApp } from "../store";
 import { BackupsView } from "./BackupsView";
+import { ConnectionScreen } from "./ConnectionScreen";
 import { CreateTableModal } from "./CreateTableModal";
 import { ExplorePanel } from "./ExplorePanel";
 import { SchemaView } from "./SchemaView";
@@ -21,12 +22,15 @@ type Tab = "explore" | "schema" | "backups" | "settings";
 export function AppShell() {
   const {
     active,
+    sessions,
+    activeId,
     tables,
     selectedTable,
     tableInfo,
     loadingTables,
     loadingTable,
     disconnect,
+    focusSession,
     refreshTables,
     selectTable,
     toast,
@@ -34,6 +38,7 @@ export function AppShell() {
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<Tab>("explore");
   const [creating, setCreating] = useState(false);
+  const [adding, setAdding] = useState(false);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -43,30 +48,61 @@ export function AppShell() {
 
   useEffect(() => {
     setTab("explore");
-  }, [selectedTable]);
+  }, [selectedTable, activeId]);
+
+  useEffect(() => {
+    setQ("");
+  }, [activeId]);
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex h-12 items-center justify-between border-b border-line bg-panel px-4">
-        <div className="flex items-center gap-2">
+      <header className="flex h-12 items-center gap-3 border-b border-line bg-panel px-3">
+        <div className="flex shrink-0 items-center gap-2 pl-1">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/15 text-accent">
             <Database size={14} />
           </div>
-          <span className="font-semibold tracking-tight">DynamoDB Admin</span>
+          <span className="hidden font-semibold tracking-tight sm:inline">DynamoDB Admin</span>
         </div>
-        <div className="flex items-center gap-2">
-          {active && (
-            <>
-              <Badge tone="ok">{active.name}</Badge>
-              <span className="text-[11px] text-faint">
-                {connectionKindLabel(active.auth.kind)} · {active.region}
-                {active.auth.kind === "local" ? ` · ${active.auth.endpoint}` : ""}
-              </span>
-            </>
-          )}
-          <Button tone="quiet" onClick={() => disconnect()}>
-            <LogOut size={13} /> Disconnect
-          </Button>
+        <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+          {sessions.map((s) => {
+            const focused = s.connection.id === activeId;
+            return (
+              <div
+                key={s.connection.id}
+                className={`flex max-w-[240px] shrink-0 items-center rounded-lg border ${
+                  focused
+                    ? "border-accent/40 bg-accent/10"
+                    : "border-transparent bg-raised/60 hover:bg-hover"
+                }`}
+              >
+                <button
+                  className="min-w-0 flex-1 px-2.5 py-1.5 text-left"
+                  onClick={() => focusSession(s.connection.id)}
+                  title={`${s.connection.name} · ${connectionKindLabel(s.connection.auth.kind)} · ${s.connection.region}`}
+                >
+                  <div className="truncate text-[13px] font-medium">{s.connection.name}</div>
+                  <div className="truncate text-[10px] text-faint">
+                    {connectionKindLabel(s.connection.auth.kind)} · {s.connection.region}
+                    {s.connection.auth.kind === "local" ? ` · ${s.connection.auth.endpoint}` : ""}
+                  </div>
+                </button>
+                <button
+                  className="mr-1 rounded p-1 text-faint hover:bg-raised hover:text-danger"
+                  title="Close this connection"
+                  onClick={() => disconnect(s.connection.id)}
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            );
+          })}
+          <button
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-dashed border-line-strong text-muted hover:border-accent/50 hover:text-ink"
+            onClick={() => setAdding(true)}
+            title="Open another connection"
+          >
+            <Plus size={14} />
+          </button>
         </div>
       </header>
 
@@ -178,10 +214,21 @@ export function AppShell() {
                 </div>
               </div>
               <div className="min-h-0 flex-1">
-                {tab === "explore" && <ExplorePanel table={tableInfo} />}
-                {tab === "schema" && <SchemaView table={tableInfo} />}
-                {tab === "backups" && <BackupsView table={tableInfo} />}
-                {tab === "settings" && <SettingsView table={tableInfo} />}
+                {tab === "explore" && (
+                  <ExplorePanel
+                    key={`${active?.id}:${tableInfo.name}`}
+                    table={tableInfo}
+                  />
+                )}
+                {tab === "schema" && (
+                  <SchemaView key={`${active?.id}:${tableInfo.name}:schema`} table={tableInfo} />
+                )}
+                {tab === "backups" && (
+                  <BackupsView key={`${active?.id}:${tableInfo.name}:backups`} table={tableInfo} />
+                )}
+                {tab === "settings" && (
+                  <SettingsView key={`${active?.id}:${tableInfo.name}:settings`} table={tableInfo} />
+                )}
               </div>
             </>
           )}
@@ -198,6 +245,8 @@ export function AppShell() {
           }}
         />
       )}
+
+      {adding && <ConnectionScreen asModal onClose={() => setAdding(false)} />}
     </div>
   );
 }
