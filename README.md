@@ -1,66 +1,107 @@
-# DynamoDB Admin
+# DynamoDweep
 
-A desktop admin for Amazon DynamoDB, built with **Rust**, **Tauri 2**, and **React**.
+**A modern DynamoDB admin GUI and desktop client.**
 
-Connect with an AWS named profile, access keys, or DynamoDB Local. Browse tables, scan and query (base table or any GSI/LSI), edit items, manage schema, TTL, streams, capacity, and on-demand backups.
+DynamoDweep makes it easier to browse tables, query and edit items, manage indexes and table settings, and work with Amazon DynamoDB or DynamoDB Local from one desktop application.
+
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+A product by [Technodweep](https://technodweep.com).
+
+Built with Rust, Tauri 2, React, and TypeScript.
 
 ## Features
 
-- **Connections**
-  - AWS named profiles from `~/.aws/config` and `~/.aws/credentials`
-  - Access key + secret + optional session token
-  - DynamoDB Local / LocalStack via endpoint (default `http://localhost:8000`)
-  - Saved connections stored on this machine
-  - Open several connections at once (tabs); add more with **+** without closing the others
-  - **Managed DynamoDB Local**: create multiple named local databases (one folder per project), download the official engine on first use (~50 MB, not bundled), then start / stop / open / duplicate / delete from the sidebar
-- **Tables**
-  - List, filter, create, and delete
-  - Schema: keys, attribute definitions, GSIs, LSIs
-  - Add / delete GSIs
-  - Capacity (on-demand or provisioned)
-  - Streams, TTL, deletion protection
-- **Items**
-  - Scan with filters and pagination
-  - Query against the table or any GSI/LSI, with sort-key operators
-  - Get item by primary key
-  - PartiQL
-  - Create / edit / delete items (document JSON or DynamoDB JSON)
-  - Select items (shift-click) for individual or bulk delete, with a confirmation step
-  - Soft-delete by prefixing/suffixing the partition and/or sort key (writes a renamed copy, then removes the original)
-  - Import / export JSON
-- **Backups**
-  - Create, list, delete, and restore on-demand backups (not available on DynamoDB Local)
+### Connect your way
 
-## Develop
+- Use AWS named profiles from `~/.aws/config` and `~/.aws/credentials`.
+- Connect with an access key, secret key, and optional session token.
+- Connect to DynamoDB Local or LocalStack through a custom endpoint.
+- Open multiple connections in tabs.
+- Save connections on your machine for quick access.
+- Create and manage named DynamoDB Local instances directly in the app.
 
-Requirements: Rust (stable), Node 20+, and the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) for your OS.
+### Manage tables
+
+- List, filter, create, and delete tables.
+- Inspect keys, attribute definitions, global secondary indexes, and local secondary indexes.
+- Add or remove GSIs.
+- Configure on-demand or provisioned capacity.
+- Manage streams, TTL, and deletion protection.
+
+### Explore and edit data
+
+- Scan tables with filters and pagination.
+- Query tables, GSIs, and LSIs with sort-key operators.
+- Retrieve an item by its primary key.
+- Run PartiQL statements.
+- Create, edit, and delete items using document JSON or DynamoDB JSON.
+- Select and bulk-delete items with confirmation.
+- Soft-delete items by renaming their partition key, sort key, or both.
+- Import and export JSON.
+
+### Work with backups
+
+- Create, list, delete, and restore on-demand backups.
+- Backup operations are available for AWS-hosted tables and are not supported by DynamoDB Local.
+
+## Development
+
+### Prerequisites
+
+- [Node.js 20 or later](https://nodejs.org/)
+- [Rust stable](https://www.rust-lang.org/tools/install)
+- The [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) for your operating system
+
+### Run locally
 
 ```bash
+git clone git@github.com:sandeepkurien/dynamodb-desktop-admin.git
+cd dynamodb-desktop-admin
 npm install
 npm run tauri dev
 ```
 
-Production build:
+### Create a production build
 
 ```bash
 npm run tauri build
 ```
 
-## Local DynamoDB
+Tauri writes the platform-specific installers and application bundles under `src-tauri/target/release/bundle/`.
 
-Start DynamoDB Local on port 8000, then create a **Local** connection:
+## Connecting to DynamoDB Local
+
+Start DynamoDB Local on port `8000`, then create a **Local** connection with:
 
 - Endpoint: `http://localhost:8000`
-- Region: any (default `us-east-1`)
+- Region: `us-east-1` (or any region name)
 
-Dummy credentials are sent automatically.
+DynamoDweep supplies dummy credentials automatically for local connections.
 
-## Notes
+Alternatively, use the built-in local-instance manager. It creates a separate data directory for each named instance and downloads the official DynamoDB Local engine the first time it is needed. The engine is not bundled with DynamoDweep.
 
-- Saved connections (including access keys) live in `connections.json` under the OS app-data directory:
-  - macOS: `~/Library/Application Support/dynamodb-admin/connections.json`
-  - Linux: `~/.local/share/dynamodb-admin/connections.json`
-  - Windows: `%APPDATA%\dynamodb-admin\connections.json`
-  Treat that file as sensitive. The connection screen shows the exact path and can open it in Finder/Explorer.
-- Table item counts and sizes come from DynamoDB’s periodic `DescribeTable` stats, not a live count.
-- Strongly consistent reads apply to the base table and LSIs only — not GSIs.
+## Security
+
+Saved connections are stored in `connections.json` in the operating system's application-data directory. Access keys stored there are not currently encrypted, so treat the file as sensitive.
+
+- macOS: `~/Library/Application Support/dynamodb-admin/connections.json`
+- Linux: `~/.local/share/dynamodb-admin/connections.json`
+- Windows: `%APPDATA%\dynamodb-admin\connections.json`
+
+Prefer short-lived credentials or AWS named profiles whenever possible. The connection screen displays the exact storage path and can reveal the file in Finder or Explorer.
+
+## DynamoDB notes
+
+- Table item counts and sizes come from DynamoDB's periodic `DescribeTable` statistics and are not live counts.
+- Strongly consistent reads are supported for base tables and LSIs, but not for GSIs.
+
+## License
+
+Copyright 2026 [Technodweep](https://technodweep.com).
+
+Licensed under the [Apache License 2.0](LICENSE).
+
+## Trademark notice
+
+Amazon Web Services, AWS, and Amazon DynamoDB are trademarks of Amazon.com, Inc. or its affiliates. DynamoDweep is an independent project and is not affiliated with or endorsed by Amazon Web Services.

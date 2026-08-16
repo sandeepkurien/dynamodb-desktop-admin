@@ -1,8 +1,11 @@
 [package]
 name = "dynamodb-admin"
 version = "0.1.0"
-description = "A desktop admin for Amazon DynamoDB"
-authors = ["you"]
+description = "A modern DynamoDB admin GUI and desktop client"
+authors = ["Technodweep"]
+license = "Apache-2.0"
+homepage = "https://technodweep.com"
+repository = "https://github.com/sandeepkurien/dynamodb-desktop-admin"
 edition = "2021"
 
 [lib]

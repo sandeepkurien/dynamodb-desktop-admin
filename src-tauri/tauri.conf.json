@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "DynamoDB Admin",
+  "productName": "DynamoDweep",
   "version": "0.1.0",
   "identifier": "com.technodweep.dynamodb-admin",
   "build": {
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "DynamoDB Admin",
+        "title": "DynamoDweep",
         "width": 1440,
         "height": 900,
         "minWidth": 1100,
@@ -28,6 +28,9 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "publisher": "Technodweep",
+    "homepage": "https://technodweep.com",
+    "copyright": "Copyright © 2026 Technodweep",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

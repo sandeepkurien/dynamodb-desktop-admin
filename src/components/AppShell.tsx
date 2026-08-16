@@ -62,7 +62,7 @@ export function AppShell() {
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/15 text-accent">
             <Database size={14} />
           </div>
-          <span className="hidden font-semibold tracking-tight sm:inline">DynamoDB Admin</span>
+          <span className="hidden font-semibold tracking-tight sm:inline">DynamoDweep</span>
         </div>
         <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
           {sessions.map((s) => {

@@ -173,12 +173,12 @@ export function ConnectionScreen({
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-[15px] font-semibold">
-                {asModal ? "Add connection" : "DynamoDB Admin"}
+                {asModal ? "Add connection" : "DynamoDweep"}
               </div>
               <div className="text-[11px] text-faint">
                 {asModal
                   ? "Open another account, profile, or Local instance"
-                  : "Desktop console"}
+                  : "A product by Technodweep"}
               </div>
             </div>
             {asModal ? (

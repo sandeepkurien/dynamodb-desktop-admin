@@ -2,6 +2,10 @@
   "name": "dynamodb-admin",
   "private": true,
   "version": "0.1.0",
+  "description": "A modern DynamoDB admin GUI and desktop client",
+  "author": "Technodweep",
+  "homepage": "https://technodweep.com",
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
