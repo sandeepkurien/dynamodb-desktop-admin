@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/branding/dynamodweep-logo-dark.svg">
+    <img src="assets/branding/dynamodweep-logo.svg" width="760" alt="DynamoDweep — a product by Technodweep">
+  </picture>
+</p>
+
 # DynamoDweep
 
 **A modern DynamoDB admin GUI and desktop client.**

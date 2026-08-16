@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+  <title id="title">DynamoDweep</title>
+  <desc id="desc">DynamoDweep, a DynamoDB admin GUI and desktop client. A product by Technodweep.</desc>
+
+  <g transform="translate(28 28) scale(.515625)">
+    <path
+      d="M144 128h140c90 0 144 52 144 128s-54 128-144 128H144"
+      fill="none"
+      stroke="#7AB4FF"
+      stroke-width="64"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <rect x="148" y="224" width="184" height="64" rx="32" fill="#28B8D5" />
+    <circle cx="100" cy="256" r="24" fill="#F0A43A" />
+    <path
+      d="M68 410c122 23 267-9 362-98-40 95-139 143-246 135-52-4-92-18-116-37Z"
+      fill="#28B8D5"
+    />
+  </g>
+
+  <text
+    x="330"
+    y="138"
+    fill="#E9EEF7"
+    font-family="IBM Plex Sans, Inter, Arial, sans-serif"
+    font-size="78"
+    font-weight="700"
+    letter-spacing="-2"
+  >Dynamo<tspan fill="#28B8D5">Dweep</tspan></text>
+  <text
+    x="334"
+    y="184"
+    fill="#9AA7BA"
+    font-family="IBM Plex Sans, Inter, Arial, sans-serif"
+    font-size="21"
+    font-weight="600"
+    letter-spacing="3"
+  >DYNAMODB ADMIN GUI · DESKTOP CLIENT</text>
+  <text
+    x="334"
+    y="238"
+    fill="#9AA7BA"
+    font-family="IBM Plex Sans, Inter, Arial, sans-serif"
+    font-size="20"
+    font-weight="400"
+  >A product by <tspan fill="#E9EEF7" font-weight="600">Technodweep</tspan><tspan> · technodweep.com</tspan></text>
+</svg>
