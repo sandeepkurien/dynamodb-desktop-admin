@@ -11,6 +11,8 @@
 
 DynamoDweep makes it easier to browse tables, query and edit items, manage indexes and table settings, and work with Amazon DynamoDB or DynamoDB Local from one desktop application.
 
+The name pairs DynamoDB with *dvīpa* (`द्वीप`), the Sanskrit word for “island.”
+
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 A product by [Technodweep](https://technodweep.com).
