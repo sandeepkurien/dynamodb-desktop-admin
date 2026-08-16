@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-ink: #e9eef7;
+  --color-muted: #8b95a8;
+  --color-faint: #5d6678;
+  --color-line: #232a36;
+  --color-line-strong: #343d4e;
+  --color-bg: #0b0d11;
+  --color-panel: #11151c;
+  --color-raised: #171c26;
+  --color-hover: #1d2430;
+  --color-accent: #f0a43a;
+  --color-accent-2: #ffcf7a;
+  --color-danger: #ef6f78;
+  --color-ok: #6fd89a;
+  --color-info: #7ab4ff;
+  --color-pk: #7aa2f7;
+  --color-sk: #c3a6ff;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-image:
+    radial-gradient(1200px 500px at 10% -10%, rgba(240, 164, 58, 0.07), transparent 50%),
+    radial-gradient(900px 400px at 100% 0%, rgba(122, 162, 247, 0.05), transparent 45%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+input,
+select,
+textarea {
+  background: #0e1218;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 8px;
+  padding: 7px 10px;
+  outline: none;
+  width: 100%;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border-radius: 4px;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #c4842a;
+  box-shadow: 0 0 0 3px rgba(240, 164, 58, 0.15);
+}
+
+textarea {
+  resize: vertical;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+}
+
+select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #8b95a8 50%),
+    linear-gradient(135deg, #8b95a8 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 55%,
+    calc(100% - 11px) 55%;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 28px;
+}
+
+::placeholder {
+  color: var(--color-faint);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a3240;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-scroll {
+  overflow: auto;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
