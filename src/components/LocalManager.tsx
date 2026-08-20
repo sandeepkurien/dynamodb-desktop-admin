@@ -17,6 +17,10 @@ import type { LocalDbInfo, RuntimeStatus } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { Badge, Button, Field } from "./ui";
 
+function snapshotsMatch<T>(current: T, next: T): boolean {
+  return JSON.stringify(current) === JSON.stringify(next);
+}
+
 export function LocalManager({
   compact,
   onOpened,
@@ -40,8 +44,8 @@ export function LocalManager({
         api.localRuntimeStatus(),
         api.listLocalDbs(),
       ]);
-      setRuntime(st);
-      setDbs(list);
+      setRuntime((current) => (snapshotsMatch(current, st) ? current : st));
+      setDbs((current) => (snapshotsMatch(current, list) ? current : list));
     } catch (e) {
       toast("err", errMessage(e));
     }
@@ -158,7 +162,8 @@ export function LocalManager({
           </div>
           {!compact && (
             <p className="mt-1 text-xs text-muted">
-              Each name is a separate DynamoDB Local data folder — one per project.
+              Each name is a separate DynamoDB Local data folder — one per
+              project.
             </p>
           )}
         </div>
@@ -173,16 +178,17 @@ export function LocalManager({
 
       {runtime && !runtime.java_path && (
         <div className="rounded-lg border border-accent/30 bg-accent/5 px-3 py-2 text-xs text-accent">
-          Java 11+ was not found. Install a JRE (e.g. <span className="mono">brew install openjdk</span>)
-          so the app can start DynamoDB Local.
+          Java 11+ was not found. Install a JRE (e.g.{" "}
+          <span className="mono">brew install openjdk</span>) so the app can
+          start DynamoDB Local.
         </div>
       )}
 
       {runtime && runtime.java_path && !runtime.runtime_ready && (
         <div className="rounded-lg border border-line bg-raised px-3 py-2 text-xs text-muted">
           <div className="mb-2">
-            DynamoDB Local will be downloaded once (~50 MB) into Application Support. It is not
-            bundled with the app.
+            DynamoDB Local will be downloaded once (~50 MB) into Application
+            Support. It is not bundled with the app.
           </div>
           <Button tone="primary" disabled={setupBusy} onClick={setupRuntime}>
             {setupBusy ? "Downloading…" : "Download runtime"}
@@ -191,7 +197,9 @@ export function LocalManager({
       )}
 
       {runtime?.java_version && compact && (
-        <div className="truncate text-[10px] text-faint">{runtime.java_version}</div>
+        <div className="truncate text-[10px] text-faint">
+          {runtime.java_version}
+        </div>
       )}
 
       {creating && (
@@ -210,7 +218,9 @@ export function LocalManager({
               type="checkbox"
               className="shrink-0"
               checked={newMode === "memory"}
-              onChange={(e) => setNewMode(e.target.checked ? "memory" : "persistent")}
+              onChange={(e) =>
+                setNewMode(e.target.checked ? "memory" : "persistent")
+              }
             />
             In-memory (data gone when stopped)
           </label>
@@ -247,13 +257,17 @@ export function LocalManager({
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      <span className="truncate text-sm font-medium">{db.name}</span>
+                      <span className="truncate text-sm font-medium">
+                        {db.name}
+                      </span>
                       {db.running ? (
                         <Badge tone="ok">:{db.port}</Badge>
                       ) : (
                         <Badge>stopped</Badge>
                       )}
-                      {db.mode === "memory" ? <Badge tone="warn">memory</Badge> : null}
+                      {db.mode === "memory" ? (
+                        <Badge tone="warn">memory</Badge>
+                      ) : null}
                     </div>
                     <div className="mt-0.5 truncate font-mono text-[10px] text-faint">
                       {db.endpoint}
@@ -270,22 +284,36 @@ export function LocalManager({
                     <Plug size={13} />
                   </IconBtn>
                   {db.running ? (
-                    <IconBtn title="Stop" disabled={busy} onClick={() => stop(db.id)}>
+                    <IconBtn
+                      title="Stop"
+                      disabled={busy}
+                      onClick={() => stop(db.id)}
+                    >
                       <Square size={12} />
                     </IconBtn>
                   ) : (
-                    <IconBtn title="Start" disabled={busy} onClick={() => start(db.id)}>
+                    <IconBtn
+                      title="Start"
+                      disabled={busy}
+                      onClick={() => start(db.id)}
+                    >
                       <Play size={13} />
                     </IconBtn>
                   )}
-                  <IconBtn title="Duplicate" disabled={busy} onClick={() => duplicate(db)}>
+                  <IconBtn
+                    title="Duplicate"
+                    disabled={busy}
+                    onClick={() => duplicate(db)}
+                  >
                     <Copy size={13} />
                   </IconBtn>
                   <IconBtn
                     title="Show folder"
                     disabled={busy}
                     onClick={() =>
-                      revealItemInDir(db.data_path).catch((e) => toast("err", errMessage(e)))
+                      revealItemInDir(db.data_path).catch((e) =>
+                        toast("err", errMessage(e)),
+                      )
                     }
                   >
                     <FolderOpen size={13} />
@@ -310,7 +338,9 @@ export function LocalManager({
           title={`Delete local database “${pendingDelete.name}”?`}
           body="This stops the instance if it is running and deletes its data folder. Tables and items in that file are gone. AWS accounts are not affected."
           confirmLabel="Delete database"
-          confirmRequires={pendingDelete.size_bytes > 0 ? pendingDelete.name : undefined}
+          confirmRequires={
+            pendingDelete.size_bytes > 0 ? pendingDelete.name : undefined
+          }
           onConfirm={remove}
           onClose={() => setPendingDelete(null)}
         />
@@ -338,7 +368,9 @@ function IconBtn({
       disabled={disabled}
       onClick={onClick}
       className={`rounded-md p-1.5 disabled:opacity-40 ${
-        danger ? "text-faint hover:bg-raised hover:text-danger" : "text-faint hover:bg-raised hover:text-ink"
+        danger
+          ? "text-faint hover:bg-raised hover:text-danger"
+          : "text-faint hover:bg-raised hover:text-ink"
       }`}
     >
       {children}

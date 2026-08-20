@@ -3,6 +3,7 @@ use crate::error::{AppError, Result};
 use crate::state::AppState;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use std::ffi::OsStr;
 use std::fs::{self, File};
 use std::io::{Read, Write};
 use std::net::TcpListener;
@@ -13,6 +14,24 @@ use uuid::Uuid;
 
 const DOWNLOAD_URL: &str = "https://d1ni2b6xgvw0s0.cloudfront.net/v2.x/dynamodb_local_latest.tar.gz";
 const DEFAULT_PORT: u16 = 8000;
+
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+#[cfg(windows)]
+fn command_no_window(program: impl AsRef<OsStr>) -> Command {
+    let mut command = Command::new(program);
+    command.creation_flags(CREATE_NO_WINDOW);
+    command
+}
+
+#[cfg(not(windows))]
+fn command_no_window(program: impl AsRef<OsStr>) -> Command {
+    Command::new(program)
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LocalDbMeta {
@@ -251,7 +270,7 @@ pub async fn start_db(state: &AppState, id: &str) -> Result<LocalDbInfo> {
     let log = File::create(dir.join("local.log")).map_err(|e| AppError::msg(e.to_string()))?;
     let log_err = log.try_clone().map_err(|e| AppError::msg(e.to_string()))?;
 
-    let mut cmd = Command::new(&java.0);
+    let mut cmd = command_no_window(&java.0);
     cmd.arg(format!("-Djava.library.path={}", lib.display()))
         .arg("-jar")
         .arg(&jar)
@@ -547,7 +566,7 @@ fn find_java() -> Option<(PathBuf, String)> {
     }
     #[cfg(target_os = "macos")]
     {
-        if let Ok(out) = Command::new("/usr/libexec/java_home").output() {
+        if let Ok(out) = command_no_window("/usr/libexec/java_home").output() {
             if out.status.success() {
                 let home = String::from_utf8_lossy(&out.stdout).trim().to_string();
                 if !home.is_empty() {
@@ -566,7 +585,7 @@ fn java_version(bin: &Path) -> Option<String> {
     if !bin.exists() {
         return None;
     }
-    let out = Command::new(bin).arg("-version").output().ok()?;
+    let out = command_no_window(bin).arg("-version").output().ok()?;
     let text = if out.stderr.is_empty() {
         String::from_utf8_lossy(&out.stdout).into_owned()
     } else {
@@ -582,7 +601,7 @@ fn java_version(bin: &Path) -> Option<String> {
 
 fn which(cmd: &str) -> Option<PathBuf> {
     let finder = if cfg!(windows) { "where" } else { "which" };
-    let out = Command::new(finder).arg(cmd).output().ok()?;
+    let out = command_no_window(finder).arg(cmd).output().ok()?;
     if !out.status.success() {
         return None;
     }
@@ -608,7 +627,7 @@ fn pid_alive(pid: u32) -> bool {
     }
     #[cfg(unix)]
     {
-        Command::new("kill")
+        command_no_window("kill")
             .args(["-0", &pid.to_string()])
             .status()
             .map(|s| s.success())
@@ -616,7 +635,7 @@ fn pid_alive(pid: u32) -> bool {
     }
     #[cfg(windows)]
     {
-        Command::new("tasklist")
+        command_no_window("tasklist")
             .args(["/FI", &format!("PID eq {pid}"), "/NH"])
             .output()
             .map(|o| String::from_utf8_lossy(&o.stdout).contains(&pid.to_string()))
@@ -630,11 +649,11 @@ fn kill_pid(pid: u32) {
     }
     #[cfg(unix)]
     {
-        let _ = Command::new("kill").arg(pid.to_string()).status();
+        let _ = command_no_window("kill").arg(pid.to_string()).status();
     }
     #[cfg(windows)]
     {
-        let _ = Command::new("taskkill")
+        let _ = command_no_window("taskkill")
             .args(["/PID", &pid.to_string(), "/F"])
             .status();
     }
