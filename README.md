@@ -9,6 +9,12 @@
 
 **An open-source DynamoDB admin GUI and desktop client.**
 
+<p align="center">
+  <a href="https://github.com/sandeepkurien/dynamodb-desktop-admin/releases/download/1.0.0/DynamoDweep_0.1.0_x64_en-US.msi">
+    <img src="https://img.shields.io/badge/Download_for_Windows-64--bit_MSI-28B8D5?style=for-the-badge&amp;logo=windows11&amp;logoColor=white" alt="Download DynamoDweep for Windows (64-bit MSI)">
+  </a>
+</p>
+
 DynamoDweep is a cross-platform DynamoDB GUI for browsing tables, querying and editing items, managing indexes and table settings, and working with Amazon DynamoDB, DynamoDB Local, or LocalStack from one desktop application.
 
 The name pairs DynamoDB with *dvīpa* (`द्वीप`), the Sanskrit word for “island.”
