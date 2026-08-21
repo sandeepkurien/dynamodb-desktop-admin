@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  Database,
   Plus,
   RefreshCw,
   Search,
@@ -17,6 +16,7 @@ import { ExplorePanel } from "./ExplorePanel";
 import { SchemaView } from "./SchemaView";
 import { SettingsView } from "./SettingsView";
 import { Badge, Button, EmptyState, Spinner } from "./ui";
+import dynamodweepLogo from "../../assets/branding/dynamodweep-logo-dark.svg";
 
 type Tab = "explore" | "schema" | "backups" | "settings";
 
@@ -59,10 +59,11 @@ export function AppShell() {
     <div className="flex h-full flex-col">
       <header className="flex h-12 items-center gap-3 border-b border-line bg-panel px-3">
         <div className="flex shrink-0 items-center gap-2 pl-1">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/15 text-accent">
-            <Database size={14} />
-          </div>
-          <span className="hidden font-semibold tracking-tight sm:inline">DynamoDweep</span>
+          <img
+            src={dynamodweepLogo}
+            alt="DynamoDweep"
+            className="h-10 w-[190px] object-contain object-left"
+          />
         </div>
         <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
           {sessions.map((s) => {

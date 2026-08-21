@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
-import { revealItemInDir } from "@tauri-apps/plugin-opener";
+import { openUrl, revealItemInDir } from "@tauri-apps/plugin-opener";
 import { api, errMessage } from "../api";
 import { connectionKindLabel } from "../lib/format";
 import { useApp } from "../store";
@@ -20,6 +20,7 @@ import { REGIONS } from "../types";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { LocalManager } from "./LocalManager";
 import { Badge, Button, Field } from "./ui";
+import dynamodweepLogo from "../../assets/branding/dynamodweep-logo-dark.svg";
 
 const emptyDraft = (kind: ConnectionKind): ConnectionDraft => {
   const auth: ConnectionAuth =
@@ -166,19 +167,36 @@ export function ConnectionScreen({
   const body = (
     <div className={`grid-bg flex h-full ${asModal ? "rounded-2xl border border-line-strong overflow-hidden" : ""}`}>
       <aside className="flex w-[320px] flex-col border-r border-line bg-panel/90">
-        <div className="border-b border-line px-5 py-5">
+        <div className="border-b border-line px-5 py-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent">
-              <Cloud size={16} />
-            </div>
             <div className="min-w-0 flex-1">
-              <div className="text-[15px] font-semibold">
-                {asModal ? "Add connection" : "DynamoDweep"}
-              </div>
+              {asModal ? (
+                <div className="text-[15px] font-semibold">Add connection</div>
+              ) : (
+                <img
+                  src={dynamodweepLogo}
+                  alt="DynamoDweep"
+                  className="h-14 w-[210px] object-contain object-left"
+                />
+              )}
               <div className="text-[11px] text-faint">
                 {asModal
                   ? "Open another account, profile, or Local instance"
-                  : "A product by Technodweep"}
+                  : (
+                    <>
+                      A product by{" "}
+                      <a
+                        href="https://technodweep.com"
+                        className="text-info hover:text-accent-2 hover:underline"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          void openUrl("https://technodweep.com");
+                        }}
+                      >
+                        Technodweep
+                      </a>
+                    </>
+                  )}
               </div>
             </div>
             {asModal ? (
